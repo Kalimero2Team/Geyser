@@ -244,3 +244,6 @@ locales/
 /cache/
 /packs/
 /dump.json
+
+### Java Extension ###
+.classpath
