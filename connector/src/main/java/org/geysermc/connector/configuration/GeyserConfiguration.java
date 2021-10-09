@@ -80,6 +80,8 @@ public interface GeyserConfiguration {
 
     boolean isShowCoordinates();
 
+    boolean isDisableBedrockScaffolding();
+
     EmoteOffhandWorkaroundOption getEmoteOffhandWorkaround();
 
     String getDefaultLocale();

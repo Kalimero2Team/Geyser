@@ -40,8 +40,12 @@ public class WorldCache {
     @Setter
     private Difficulty difficulty = Difficulty.EASY;
 
+    @Setter
+    private boolean disableBedrockScaffolding;
+
     public WorldCache(GeyserSession session) {
         this.session = session;
+        this.disableBedrockScaffolding = session.getConnector().getConfig().isDisableBedrockScaffolding();
         this.scoreboard = new Scoreboard(session);
         scoreboardSession = new ScoreboardSession(session);
     }
