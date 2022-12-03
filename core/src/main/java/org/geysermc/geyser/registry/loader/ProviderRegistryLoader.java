@@ -28,11 +28,16 @@ package org.geysermc.geyser.registry.loader;
 import org.geysermc.geyser.api.command.Command;
 import org.geysermc.geyser.api.event.EventRegistrar;
 import org.geysermc.geyser.api.extension.Extension;
+import org.geysermc.geyser.api.entity.EntityDefinition;
+import org.geysermc.geyser.api.entity.EntityIdentifier;
 import org.geysermc.geyser.api.item.custom.CustomItemData;
 import org.geysermc.geyser.api.item.custom.CustomItemOptions;
 import org.geysermc.geyser.api.item.custom.NonVanillaCustomItemData;
 import org.geysermc.geyser.command.GeyserCommandManager;
 import org.geysermc.geyser.event.GeyserEventRegistrar;
+import org.geysermc.geyser.entity.GeyserEntityDefinition;
+import org.geysermc.geyser.entity.GeyserEntityIdentifier;
+import org.geysermc.geyser.entity.factory.EntityFactory;
 import org.geysermc.geyser.item.GeyserCustomItemData;
 import org.geysermc.geyser.item.GeyserCustomItemOptions;
 import org.geysermc.geyser.item.GeyserNonVanillaCustomItemData;
@@ -50,6 +55,8 @@ public class ProviderRegistryLoader implements RegistryLoader<Map<Class<?>, Prov
         providers.put(Command.Builder.class, args -> new GeyserCommandManager.CommandBuilder<>((Extension) args[0]));
         providers.put(CustomItemData.Builder.class, args -> new GeyserCustomItemData.CustomItemDataBuilder());
         providers.put(CustomItemOptions.Builder.class, args -> new GeyserCustomItemOptions.CustomItemOptionsBuilder());
+        providers.put(EntityIdentifier.Builder.class, args -> new GeyserEntityIdentifier.EntityIdentifierBuilder());
+        providers.put(EntityDefinition.Builder.class, args -> new GeyserEntityDefinition.EntityDefinitionBuilder((EntityFactory<?>) args[0], (boolean) args[1]));
         providers.put(NonVanillaCustomItemData.Builder.class, args -> new GeyserNonVanillaCustomItemData.NonVanillaCustomItemDataBuilder());
         providers.put(EventRegistrar.class, args -> new GeyserEventRegistrar(args[0]));
 

@@ -41,7 +41,10 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import org.geysermc.geyser.entity.EntityDefinition;
+import org.geysermc.geyser.GeyserImpl;
+import org.geysermc.geyser.api.entity.EntityDefinition;
+import org.geysermc.geyser.api.event.lifecycle.GeyserDefineEntitiesEvent;
+import org.geysermc.geyser.entity.GeyserEntityDefinition;
 import org.geysermc.geyser.inventory.item.Enchantment.JavaEnchantment;
 import org.geysermc.geyser.inventory.recipe.GeyserRecipe;
 import org.geysermc.geyser.registry.loader.*;
@@ -58,8 +61,10 @@ import org.geysermc.geyser.translator.level.block.entity.BlockEntityTranslator;
 import org.geysermc.geyser.translator.level.event.LevelEventTranslator;
 import org.geysermc.geyser.translator.sound.SoundInteractionTranslator;
 import org.geysermc.geyser.translator.sound.SoundTranslator;
+import org.geysermc.geyser.util.EntityUtils;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Holds all the common registries in Geyser.
@@ -108,12 +113,12 @@ public final class Registries {
     /**
      * A map containing all entity types and their respective Geyser definitions
      */
-    public static final SimpleMappedRegistry<EntityType, EntityDefinition<?>> ENTITY_DEFINITIONS = SimpleMappedRegistry.create(RegistryLoaders.empty(() -> new EnumMap<>(EntityType.class)));
+    public static final SimpleMappedRegistry<EntityType, GeyserEntityDefinition<?>> ENTITY_DEFINITIONS = SimpleMappedRegistry.create(RegistryLoaders.empty(() -> new EnumMap<>(EntityType.class)));
 
     /**
-     * A map containing all Java entity identifiers and their respective Geyser definitions
+     * A map containing all entity identifiers and their respective Geyser definitions
      */
-    public static final SimpleMappedRegistry<String, EntityDefinition<?>> JAVA_ENTITY_IDENTIFIERS = SimpleMappedRegistry.create(RegistryLoaders.empty(Object2ObjectOpenHashMap::new));
+    public static final SimpleMappedRegistry<String, GeyserEntityDefinition<?>> ENTITY_IDENTIFIERS = SimpleMappedRegistry.create(RegistryLoaders.empty(Object2ObjectOpenHashMap::new));
 
     /**
      * A registry containing all the Java packet translators.
@@ -190,5 +195,25 @@ public final class Registries {
             biomesNbt.put(key, value.build());
         }
         BIOMES_NBT.set(biomesNbt.build());
+    }
+
+    public static void callRegistryEvents() {
+        // Call registry events
+        List<EntityDefinition> definitions = ENTITY_IDENTIFIERS.get().values().stream()
+                .map(def -> (EntityDefinition) def)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+
+        GeyserDefineEntitiesEvent defineEntitiesEvent = new GeyserDefineEntitiesEvent(definitions);
+        GeyserImpl.getInstance().eventBus().fire(defineEntitiesEvent);
+
+        defineEntitiesEvent.definitions().forEach(definition -> {
+            GeyserEntityDefinition<?> geyserDefinition = (GeyserEntityDefinition<?>) definition;
+
+            // If our entity is custom, register it
+            if (geyserDefinition.custom()) {
+                EntityUtils.registerEntity(geyserDefinition.identifier(), geyserDefinition);
+            }
+        });
     }
 }

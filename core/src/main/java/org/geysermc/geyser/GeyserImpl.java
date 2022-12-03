@@ -197,6 +197,9 @@ public class GeyserImpl implements GeyserApi {
         MessageTranslator.init();
         MinecraftLocale.init();
 
+        /* Call Registry events */
+        Registries.callRegistryEvents(); // todo: before or after the above inits?
+
         startInstance();
 
         GeyserConfiguration config = bootstrap.getGeyserConfig();

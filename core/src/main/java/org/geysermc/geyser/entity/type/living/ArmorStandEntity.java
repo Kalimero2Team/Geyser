@@ -35,7 +35,7 @@ import com.nukkitx.protocol.bedrock.data.entity.EntityFlag;
 import com.nukkitx.protocol.bedrock.data.inventory.ItemData;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
-import org.geysermc.geyser.entity.EntityDefinition;
+import org.geysermc.geyser.entity.GeyserEntityDefinition;
 import org.geysermc.geyser.entity.EntityDefinitions;
 import org.geysermc.geyser.entity.type.LivingEntity;
 import org.geysermc.geyser.session.GeyserSession;
@@ -83,7 +83,7 @@ public class ArmorStandEntity extends LivingEntity {
      */
     private boolean positionUpdateRequired = false;
 
-    public ArmorStandEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, EntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw) {
+    public ArmorStandEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw) {
         super(session, entityId, geyserId, uuid, definition, position, motion, yaw, pitch, headYaw);
     }
 
