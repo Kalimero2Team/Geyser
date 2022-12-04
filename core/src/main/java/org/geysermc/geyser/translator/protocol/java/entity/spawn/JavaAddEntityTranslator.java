@@ -75,8 +75,6 @@ public class JavaAddEntityTranslator extends PacketTranslator<ClientboundAddEnti
                     .build();
         }
 
-        System.out.println("def used " + definition);
-
         Entity entity;
         if (packet.getType() == EntityType.FALLING_BLOCK) {
             entity = new FallingBlockEntity(session, packet.getEntityId(), session.getEntityCache().getNextEntityId().incrementAndGet(), packet.getUuid(),
